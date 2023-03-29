@@ -1,0 +1,19 @@
+import requests
+from bs4 import BeautifulSoup
+import csv
+
+url = "https://www.example.com"
+response = requests.get(url)
+
+soup = BeautifulSoup(response.text, "html.parser")
+
+data = []
+for item in soup.find_all("div", class_="item"):
+    name = item.find("h2", class_="name").text.strip()
+    price = item.find("span", class_="price").text.strip()
+    data.append([name, price])
+
+with open("data.csv", "w", newline="") as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(["Name", "Price"])
+    writer.writerows(data)
