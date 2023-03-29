@@ -1,0 +1,41 @@
+import requests
+
+api_key = "YOUR API KEY"
+base_url = "http://api.weatherapi.com/v1/forecast.json"
+
+def get_weather_data(location):
+    params = {
+        "key": api_key,
+        "q": location,
+        "days": 3,
+        "units": "imperial"  # Change temperature units to Fahrenheit
+    }
+
+    response = requests.get(base_url, params=params)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Error retrieving weather data")
+        return None
+
+def display_weather_data(data):
+    print(f"Weather forecast for {data['location']['name']}, {data['location']['region']}, {data['location']['country']}")
+
+    for forecast in data["forecast"]["forecastday"]:
+        date = forecast["date"]
+        min_temp = forecast["day"]["mintemp_f"]  # Display temperature in Fahrenheit
+        max_temp = forecast["day"]["maxtemp_f"]  # Display temperature in Fahrenheit
+        condition = forecast["day"]["condition"]["text"]
+
+        print(f"\n{date}\nCondition: {condition}\nMin Temp: {min_temp}°F\nMax Temp: {max_temp}°F")  # Display temperature in Fahrenheit
+
+def main():
+    location = input("Enter location: ")
+    weather_data = get_weather_data(location)
+
+    if weather_data:
+        display_weather_data(weather_data)
+
+if __name__ == "__main__":
+    main()
